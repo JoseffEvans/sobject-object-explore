@@ -46,6 +46,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "nunjucks": "^3.2.4"
+    "nunjucks": "^3.2.4",
+    "sqlite3": "^5.1.7"
   }
 }

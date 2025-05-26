@@ -2,18 +2,76 @@
     <body>
 
         <div>Select Environment</div>
-        <div style="
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin: 4px 0px;
-        ">
-            {% for al in alias %}
+        <a href="command:sobject-object-explore-open?%7B%22refresh%22:%20true%7D">Refresh</a>
+        {{ navbar|safe }}
+        <div><input id="search" type="text" style="
+            background-color: transparent;
+            border: 1px var(--vscode-editor-foreground) solid;
+            border-radius: 4px;
+            box-shadow: none;
+            color: var(--vscode-editor-foreground);
+            padding: 2px;
+        "/></div>
+        <div
+            id="environmentList"
+            style="
+                display: flex;
+                gap: 4px;
+                margin: 4px 0px;
+                flex-direction: column;
+            "
+        >
+            {% for i, al in alias.entries() %}
                 <a
                     href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{al}}%22%7D"
+                    index="{{i}}"
                 >{{al}}</a>
             {% endfor %}
         </div>
-        <a href="command:sobject-object-explore-open?%7B%22refresh%22:%20true%7D">Refresh</a>
+        {{test|safe}}
     </body>
+    <script>
+        var environmentList = document.getElementById("environmentList");
+        var currentIndex = 0;
+        var visibleCount = environmentList.children.length;
+
+        function highlightSelected(){
+            var i = 0;
+            [... environmentList.children].forEach((link) =>{
+                link.style.backgroundColor = 
+                    currentIndex == i
+                    ? "red"
+                    : "transparent";
+                if(link.style.display != "none") i++;
+            });
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if(event.key == "ArrowUp"){
+                currentIndex = (currentIndex - 1 + visibleCount) % visibleCount;
+                highlightSelected();
+            }else if(event.key == "ArrowDown"){
+                currentIndex = (currentIndex + 1) % visibleCount;
+                highlightSelected();
+            }else if(event.key == "Enter"){
+                environmentList.children[currentIndex].click();
+            }
+        });
+
+        var search = document.getElementById("search");
+        search.addEventListener("input", (event) => {
+            var term = event.target.value.toLowerCase();
+            visibleCount = 0;
+            [... environmentList.children].forEach(link => {
+                var show = !term || 
+                    link.innerText.toLowerCase().includes(term);
+
+                link.style.display = show
+                    ? "block"
+                    : "none";
+
+                if(show) visibleCount++;
+            });
+        });
+    </script>
 </html>

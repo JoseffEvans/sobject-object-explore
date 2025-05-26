@@ -1,5 +1,38 @@
 <html>
     <body>
         <div>{{env}} Environment Page</div>
+        {{ navbar|safe }}
+        <a href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22refresh%22:%20true%7D">Refresh</a>
+        <div>
+            <input type="text" id="search"/>
+        </div>
+        <div
+            id="objectNames"
+            style="display: flex; flex-direction: column;"
+        >
+            {% for i, name in names.entries() %}
+                <a
+                    index="{{i}}"
+                    href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%22{{name}}%22%7D"
+                >{{name}}</a>
+            {% endfor %}
+        </div>
+        <script>
+            /** @param {string} searchText */
+            function search(searchText){
+                searchText = searchText.toLowerCase();
+                var objectNames = document.getElementById("objectNames");
+                [... objectNames.children].forEach(item => {
+                    item.style.display = !searchText || item.innerText.toLowerCase().includes(searchText)
+                        ? "block"
+                        : "none";
+                });
+            }
+
+            var searchElement = document.getElementById("search");
+            searchElement.addEventListener("input", event => {
+                search(event.target.value);
+            });
+        </script>
     </body>
 </html>
