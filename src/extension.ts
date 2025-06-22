@@ -38,8 +38,8 @@ async function navigate(
 	params?: NavParams
 ){
 	if(!currentPanel){
-		await db.initDatabase(context, true);
-		data.setLogging(true);
+		await db.initDatabase(context, false);
+		data.setLogging(false);
 
 		currentPanel = vscode.window.createWebviewPanel(
 			extName,
@@ -55,23 +55,34 @@ async function navigate(
 		currentPanel.onDidDispose(e => {currentPanel = undefined});
 	} 
 
-	console.log(`params: ${JSON.stringify(params)}`);
-	console.log(`back: ${JSON.stringify(back)}`);
 
 	if(!params) params = {};
 	if(!params.refresh) params.refresh = false;
 
-	if(params?.back){
-		console.log(`Back length: ${back.length}`);
+	log(`Opening sobject explore with params: ${paramDesc(params)}`);
+	log(`BackList Before: \n${back.map(b => paramDesc(b)).join(`\n`)}`);
+
+	if(params.back){
 		var last = back.pop();
-		if(back.length == 0) return;
+		
+		if(back.length == 0){
+			back.push({ "env": "" });
+			return;
+		} 
 		if(last) forward.push(last);
 		params = back[back.length - 1];
+	}else if(params.forward){
+		if(forward.length == 0){
+			return;
+		}
+		params = forward.pop()!;
+		back.push(params);
+	}else{
+		forward = [];
+		back.push(params || { "env" : "" });
 	}
 
-	console.log(`Params after back: ${JSON.stringify(params)}`);
-
-	if(!params?.back && !params?.forward) back.push(params || { "env" : "" });
+	log(`BackList After: \n${back.map(b => paramDesc(b)).join(`\n`)}`);
 
 	try{
 		if(!(params?.env)){
@@ -211,6 +222,14 @@ function getTypeShortDesc(field: SObjectField){
 	if(field.type == "reference" && field.referenceTo)
 		return `reference(${field.referenceTo.join(', ')})`
 	else return field.type;
+}
+
+function log(msg: string){
+	console.log(msg);
+}
+
+function paramDesc(params: NavParams): string{
+	return `Back: ${params.back}; Forward: ${params.forward}; Env: ${params.env}; Object: ${params.sobject}; Field: ${params.field};`
 }
 
 export function deactivate() {}

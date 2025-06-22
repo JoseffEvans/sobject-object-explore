@@ -1,6 +1,15 @@
 <div id="navbar">
-    <a id="home" href="command:sobject-object-explore-open">Home</a>
-    <a id="gotoEnv" href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22%7D">{{env}}</a>
     <a id="back" href="command:sobject-object-explore-open?%7B%22back%22:%20true%7D">Back</a>
-    <a id="forward" href="command:sobject-object-explore-open?%7B%22forward%22:%20true%7D">Forward</a>
+    <a id="forward" href="command:sobject-object-explore-open?%7B%22forward%22:%20true%7D">Forward</a> /
+    <a id="home" href="command:sobject-object-explore-open">Home</a> /
+    <a id="gotoEnv" href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22%7D">{{env}}</a> /
+
+    <script>
+        document.addEventListener("mousedown", event => {
+            if (event.button === 3)
+                document.getElementById("back").click();
+            if(event.button === 4)
+                document.getElementById("forward").click();
+        });
+    </script>
 </div>
