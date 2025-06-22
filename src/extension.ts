@@ -6,6 +6,15 @@ import { SObjectField } from './sfObjectDefs';
 import * as data from './dataController'
 import * as db from './database'
 
+class NavParams {
+	env?: string
+	sobject?: string
+	field?: string
+	refresh? : boolean
+	back?: boolean
+	forward?: boolean
+}
+
 const extName = "sobject-object-explore"
 
 var currentPanel: vscode.WebviewPanel | undefined;
@@ -21,18 +30,19 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(openCommand);
 }
 
-class NavParams {
-	env?: string
-	sobject?: string
-	field?: string
-	refresh? : boolean
-	back?: boolean
-	forward?: boolean
-}
-
 var back : NavParams[] = []
 var forward : NavParams[] = []
 
+/**
+ * The pages shown by this extension are rendered on the server
+ * Navigation is handled by re-executing the command with different parameters
+ * 
+ * Examples:
+ * params { "env": "live", "sobject": "case", "field": "id" } opens the case id field page, on the live alias
+ * params { "back": true } returns to the prev page 
+ * params {} opens the home page
+ * params {"env": "test", "sobject": "task", "refresh": true } refresh the task object using the SF CLI
+ */
 async function navigate(
 	context: vscode.ExtensionContext,
 	params?: NavParams
@@ -55,34 +65,36 @@ async function navigate(
 		currentPanel.onDidDispose(e => {currentPanel = undefined});
 	} 
 
-
 	if(!params) params = {};
 	if(!params.refresh) params.refresh = false;
 
 	log(`Opening sobject explore with params: ${paramDesc(params)}`);
-	log(`BackList Before: \n${back.map(b => paramDesc(b)).join(`\n`)}`);
+	// log(`BackList Before: \n${back.map(b => paramDesc(b)).join(`\n`)}`);
+
+	// handle navigation back or forward - override the params from the history lists
 
 	if(params.back){
 		var last = back.pop();
-		
 		if(back.length == 0){
 			back.push({ "env": "" });
 			return;
 		} 
 		if(last) forward.push(last);
 		params = back[back.length - 1];
+		if(params.refresh) params.refresh = false;
 	}else if(params.forward){
 		if(forward.length == 0){
 			return;
 		}
 		params = forward.pop()!;
+		if(params.refresh) params.refresh = false;
 		back.push(params);
 	}else{
 		forward = [];
 		back.push(params || { "env" : "" });
 	}
 
-	log(`BackList After: \n${back.map(b => paramDesc(b)).join(`\n`)}`);
+	// log(`BackList After: \n${back.map(b => paramDesc(b)).join(`\n`)}`);
 
 	try{
 		if(!(params?.env)){
@@ -109,25 +121,25 @@ async function showEnvironmentSelect(
 	context: vscode.ExtensionContext, 
 	refresh: boolean
 ){
-	currentPanel!.webview.html = nunjuks.renderString( 
+	currentPanel!.webview.html = renderInContainer(context, "", nunjuks.renderString( 
 		getHtml(context, 'selectEnvironment'),
 		{ 
 			alias: await data.getAlias(refresh),
 			navbar: getNavBar(context, "")
 		}
-	);
+	));
 }
 
 async function showEnvironment(context: vscode.ExtensionContext, env: string, refresh: boolean){
 	var objectNames = (await data.getEnvData(env, refresh)).objects.map(obj => obj.name);
-	currentPanel!.webview.html = nunjuks.renderString(
+	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
 		getHtml(context, "environmentIndex"),
 		{ 
 			env: env, 
 			names: objectNames,
 			navbar: getNavBar(context, env)
 		} 
-	);
+	));
 }
 
 async function getSObject(
@@ -140,7 +152,7 @@ async function getSObject(
 	object.fields = object.fields.sort(
 		(a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())
 	);
-	currentPanel!.webview.html = nunjuks.renderString(
+	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
 		getHtml(context, "object"),
 		{
 			env: env,
@@ -152,7 +164,7 @@ async function getSObject(
 			types: Object.fromEntries(object.fields.map(field => [field.name, getTypeShortDesc(field)])),
 			navbar: getNavBar(context, env)
 		}
-	);
+	));
 }
 
 async function showField(
@@ -167,7 +179,7 @@ async function showField(
 
 	if(!field) throw Error(`Could not found field ${sobjectName}.${fieldName}`);
 
-	currentPanel!.webview.html = nunjuks.renderString(
+	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
 		getFieldTemplateHtml(context, field.type),
 		{
 			obj: sobject,
@@ -175,7 +187,7 @@ async function showField(
 			navbar: getNavBar(context, env),
 			fieldJson: JSON.stringify(field, null, 4)
 		}
-	);
+	));
 }
 
 function getFieldTemplateHtml(context: vscode.ExtensionContext, type: string){
@@ -214,6 +226,13 @@ function getHtml(context: vscode.ExtensionContext, name: string){
 	);
 }
 
+function getCss(context: vscode.ExtensionContext, name: string){
+	return readFileSync(
+		path.join(context.extensionPath, 'src', 'css', `${name}.css`),
+		'utf8'	
+	);
+}
+
 function findMaxLength(strings: String[]) : number{
 	return Math.max(...strings.map(string => string.length));
 }
@@ -230,6 +249,18 @@ function log(msg: string){
 
 function paramDesc(params: NavParams): string{
 	return `Back: ${params.back}; Forward: ${params.forward}; Env: ${params.env}; Object: ${params.sobject}; Field: ${params.field};`
+}
+
+function renderInContainer(
+	context: vscode.ExtensionContext, 
+	env: string,
+	content: string
+){
+	return nunjuks.renderString(getHtml(context, "container"), { 
+		content: content,
+		navbar: getNavBar(context, env),
+		css: getCss(context, "styles")
+	});
 }
 
 export function deactivate() {}
