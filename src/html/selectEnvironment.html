@@ -11,51 +11,25 @@
             color: var(--vscode-editor-foreground);
             padding: 2px;
         "/></div>
-        <div
+        <ul
             id="environmentList"
-            style="
-                display: flex;
-                gap: 4px;
-                margin: 4px 0px;
-                flex-direction: column;
-            "
+            class="item-list"
         >
             {% for i, al in alias.entries() %}
-                <a
-                    href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{al}}%22%7D"
-                    index="{{i}}"
-                >{{al}}</a>
+                <li class="list-item">
+                    <a
+                        href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{al}}%22%7D"
+                        class="list-link"
+                        index="{{i}}"
+                    >{{al}}</a>
+                </li>
             {% endfor %}
-        </div>
+        </ul>
         {{test|safe}}
     </body>
     <script>
         var environmentList = document.getElementById("environmentList");
-        var currentIndex = 0;
-        var visibleCount = environmentList.children.length;
 
-        function highlightSelected(){
-            var i = 0;
-            [... environmentList.children].forEach((link) =>{
-                link.style.backgroundColor = 
-                    currentIndex == i
-                    ? "red"
-                    : "transparent";
-                if(link.style.display != "none") i++;
-            });
-        }
-
-        document.addEventListener("keydown", (event) => {
-            if(event.key == "ArrowUp"){
-                currentIndex = (currentIndex - 1 + visibleCount) % visibleCount;
-                highlightSelected();
-            }else if(event.key == "ArrowDown"){
-                currentIndex = (currentIndex + 1) % visibleCount;
-                highlightSelected();
-            }else if(event.key == "Enter"){
-                environmentList.children[currentIndex].click();
-            }
-        });
 
         var search = document.getElementById("search");
         search.addEventListener("input", (event) => {

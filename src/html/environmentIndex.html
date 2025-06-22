@@ -5,17 +5,21 @@
         <div>
             <input type="text" id="search"/>
         </div>
-        <div
+        <ul
             id="objectNames"
-            style="display: flex; flex-direction: column;"
+            class="item-list"
         >
             {% for i, name in names.entries() %}
-                <a
-                    index="{{i}}"
-                    href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%22{{name}}%22%7D"
-                >{{name}}</a>
+                <li class="list-item">
+                    <a
+                        index="{{i}}"
+                        class="list-link"
+                        target="_blank"
+                        href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%22{{name}}%22%7D"
+                    >{{name}}</a>
+                </li>
             {% endfor %}
-        </div>
+    </ul>
         <script>
             /** @param {string} searchText */
             function search(searchText){

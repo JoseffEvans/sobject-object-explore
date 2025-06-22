@@ -16,6 +16,7 @@ class NavParams {
 }
 
 const extName = "sobject-object-explore"
+const dataLogging = true;
 
 var currentPanel: vscode.WebviewPanel | undefined;
 
@@ -48,8 +49,8 @@ async function navigate(
 	params?: NavParams
 ){
 	if(!currentPanel){
-		await db.initDatabase(context, false);
-		data.setLogging(false);
+		await db.initDatabase(context, dataLogging);
+		data.setLogging(dataLogging);
 
 		currentPanel = vscode.window.createWebviewPanel(
 			extName,

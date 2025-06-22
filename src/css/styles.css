@@ -1,0 +1,37 @@
+.item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.list-item {
+    background: var(--vscode-sideBar-background, #1e1e1e);
+    border-radius: 4px;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    padding: 0;
+}
+
+.list-link {
+    display: block;
+    padding: 8px 14px;
+    color: var(--vscode-sideBar-foreground, #d4d4d4);
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.list-link:hover, .list-link:focus {
+    background: var(--vscode-list-hoverBackground, #2a2d2e);
+    color: var(--vscode-list-activeSelectionForeground, #ffffff);
+    outline: none;
+}
+
+.list-link:active {
+    background: var(--vscode-list-activeSelectionBackground, #094771);
+    color: var(--vscode-list-activeSelectionForeground, #ffffff);
+}
