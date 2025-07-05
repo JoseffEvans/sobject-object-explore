@@ -163,3 +163,9 @@ export class SObject {
     childRelationships!: SObjectChildRelationship[];
     fields!: SObjectField[];
 }
+
+// TODO implement from real command
+export class FormulaData{
+    id!: number
+    value!: string
+}

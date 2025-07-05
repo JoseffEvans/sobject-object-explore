@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as nunjuks from 'nunjucks';
 import { SObjectField } from './sfObjectDefs';
 import * as data from './dataController'
-import * as db from './database'
+import * as db from './database/database'
 
 class NavParams {
 	env?: string

@@ -1,7 +1,8 @@
 import * as cli from './sfCli'
-import * as db from './database'
 import { EnvData } from './internalSfDataModels';
 import { SObject } from './sfObjectDefs';
+
+import * as db from './database/database'
 
 var loggingEnabled: boolean = false;
 
@@ -15,14 +16,14 @@ export async function getAlias(refresh: Boolean): Promise<string[]>{
     log(`Get alias called with refresh: ${refresh}`);
 
     if(!refresh){
-        aliasList = await db.getAlias();
+        aliasList = await db.alias.getAlias();
     }
 
     if(refresh || !aliasList || aliasList.length == 0){
         log(`Refreshing alias from CLI`)
         aliasList = await cli.getAlias();
         if(aliasList)
-            await db.setAlias(aliasList);
+            await db.alias.setAlias(aliasList);
         else
             console.log(`Did not find any alias from CLI`);
     }
@@ -36,7 +37,7 @@ export async function getEnvData(envName: string, refresh: boolean): Promise<Env
     log(`Getting data for environment ${envName} with refresh: ${refresh}`);
     
     if(!refresh){
-        data = await db.getEnvData(envName);
+        data = await db.env.getEnvData(envName);
     }
     if(refresh || !data || !data.objects || data.objects.length == 0){
         log(`Refreshing env data for ${envName} from cli`);
@@ -45,7 +46,7 @@ export async function getEnvData(envName: string, refresh: boolean): Promise<Env
             env: envName,
             objects: objectNames.map(name => ({ name: name }))
         };
-        db.setEnvData(data);
+        db.env.setEnvData(data);
     }
 
     return data;
@@ -57,13 +58,13 @@ export async function getSObject(env: string, sobject: string, refresh: boolean)
     log(`Getting data for environment ${env}, object ${sobject} with refresh ${refresh}`);
 
     if(!refresh){
-        data = await db.getSObjectData(env, sobject);
+        data = await db.sobject.getSObjectData(env, sobject);
     } 
     if(refresh || !data){
         log(`Refreshing sobject def from cli for sobject ${sobject} in env ${env}`);
         data = await cli.getSObject(env, sobject);
         if(!data) throw Error(`Data controller failed when trying to get sobject ${sobject} in env ${env}`);
-        await db.setSObjectData(env, sobject, data);
+        await db.sobject.setSObjectData(env, sobject, data);
     }
 
     return data;
