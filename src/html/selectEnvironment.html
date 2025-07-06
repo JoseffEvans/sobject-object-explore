@@ -1,16 +1,13 @@
 <html>
     <body>
 
-        <div>Select Environment</div>
-        <a href="command:sobject-object-explore-open?%7B%22refresh%22:%20true%7D">Refresh</a>
-        <div><input id="search" type="text" style="
-            background-color: transparent;
-            border: 1px var(--vscode-editor-foreground) solid;
-            border-radius: 4px;
-            box-shadow: none;
-            color: var(--vscode-editor-foreground);
-            padding: 2px;
-        "/></div>
+        <h1>Select Environment</h1>
+
+        <div class="searchbar-row">
+            <div class="searchbar"><input class="searchbar-input" id="search" type="text"/></div>
+            <a class="navbar-link" href="command:sobject-object-explore-open?%7B%22refresh%22:%20true%7D">Refresh and Clear Cache</a>
+        </div>
+
         <ul
             id="environmentList"
             class="item-list"

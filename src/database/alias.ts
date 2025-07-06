@@ -7,6 +7,9 @@ export async function setAlias(alias: string[]){
     log('Deleteing SObjects');
     await runAsync(`DELETE FROM sobjects`);
 
+    log('Deleting formulas');
+    await runAsync(`DELETE FROM formulas`);
+
     log(`Creating environments: ${JSON.stringify(alias)}`);
     for(var a of alias)
         await runAsync(`INSERT INTO environments (name) VALUES (?)`, [a]);

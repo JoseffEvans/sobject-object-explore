@@ -73,3 +73,51 @@
     background: var(--vscode-button-secondaryBackground, #005a9e);
     color: var(--vscode-button-foreground, #fff);
 }
+
+.searchbar {
+    display: flex;
+    align-items: center;
+    background: var(--vscode-input-background, #3c3c3c);
+    border: 1px solid var(--vscode-input-border, #4a4a4a);
+    border-radius: 3px;
+    padding: 4px 8px;
+    min-width: 200px;
+    max-width: 300px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.searchbar:focus-within {
+    border-color: var(--vscode-focusBorder, #007acc);
+    box-shadow: 0 0 0 1px var(--vscode-focusBorder, #007acc);
+    outline: none;
+}
+
+.searchbar-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--vscode-input-foreground, #d4d4d4);
+    font-size: 0.9rem;
+    font-family: inherit;
+    padding: 2px 0;
+}
+
+.searchbar-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.searchbar-input::placeholder {
+    color: var(--vscode-input-placeholderForeground, #a6a6a6);
+}
+
+.searchbar-row{
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    gap: 4px;
+}

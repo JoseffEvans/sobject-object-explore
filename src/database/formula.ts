@@ -15,10 +15,9 @@ export async function setFormulaData(env: string, sobject: string, field: string
    log(`Formula data updated for ${env}.${sobject}.${field}`);
 }
 
-// TODO implement
-export async function getFormulaData(env: string, sobject: string, field: string): Promise<FormulaData | null>{
+export async function getFormulaData(env: string, sobject: string, field: string): Promise<string | null>{
     var data = await allAsync(`
-        SELECT id, value
+        SELECT value
         FROM formulas
             WHERE 
                 fieldName = ?

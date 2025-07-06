@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import { SObject } from "./sfObjectDefs";
 
 export async function getAlias(){
@@ -3317,4 +3318,9 @@ var res = JSON.parse(`{
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   return res;
+}
+
+export async function getFormula(env: string, sobject: string, field: string): Promise<string | null>{
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  return "TEST FORMULA VALUE";
 }

@@ -18,8 +18,6 @@ class NavParams {
 const extName = "sobject-object-explore"
 const dataLogging = true;
 
-var currentPanel: vscode.WebviewPanel | undefined;
-
 export async function activate(context: vscode.ExtensionContext) {
 	console.log(`sobejct object explore extension in ${context.extensionPath}`)
 
@@ -31,6 +29,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(openCommand);
 }
 
+var currentPanel: vscode.WebviewPanel | undefined; // Upon a second command it reuses the current panel.
 var back : NavParams[] = []
 var forward : NavParams[] = []
 
@@ -70,10 +69,9 @@ async function navigate(
 	if(!params.refresh) params.refresh = false;
 
 	log(`Opening sobject explore with params: ${paramDesc(params)}`);
-	// log(`BackList Before: \n${back.map(b => paramDesc(b)).join(`\n`)}`);
 
-	// handle navigation back or forward - override the params from the history lists
-
+	// Handle navigation back or forward - override the params from the history lists
+	// Seems to be good enough
 	if(params.back){
 		var last = back.pop();
 		if(back.length == 0){
@@ -95,8 +93,7 @@ async function navigate(
 		back.push(params || { "env" : "" });
 	}
 
-	// log(`BackList After: \n${back.map(b => paramDesc(b)).join(`\n`)}`);
-
+	// Route based on command params. Set the currentPanel.webview.html
 	try{
 		if(!(params?.env)){
 			if(params?.refresh) 
@@ -151,7 +148,7 @@ async function getSObject(
 ) {
 	var object = await data.getSObject(env, sObject, refresh);
 	object.fields = object.fields.sort(
-		(a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+		(a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase())
 	);
 	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
 		getHtml(context, "object"),
@@ -180,19 +177,21 @@ async function showField(
 
 	if(!field) throw Error(`Could not found field ${sobjectName}.${fieldName}`);
 
-	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
-		getFieldTemplateHtml(context, field.type),
-		{
-			obj: sobject,
-			field: field,
-			navbar: getNavBar(context, env),
-			fieldJson: JSON.stringify(field, null, 4)
-		}
-	));
-}
-
-function getFieldTemplateHtml(context: vscode.ExtensionContext, type: string){
-	return getHtml(context, "fieldDefault");
+	if(field.type == "formula"){ // check this
+		var formula = await data.getFormulaValue(env, sobjectName, fieldName, refresh);
+		// create a formula template
+	}else{
+		currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
+			getHtml(context, "fieldDefault"),
+			{
+				env: env,
+				obj: sobject,
+				field: field,
+				navbar: getNavBar(context, env),
+				fieldJson: JSON.stringify(field, null, 4)
+			}
+		));
+	}
 }
 
 function getNavBar(context: vscode.ExtensionContext, env: string){

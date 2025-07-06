@@ -1,10 +1,14 @@
 <html>
     <body>
-        <div>{{env}} Environment Page</div>
-        <a href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22refresh%22:%20true%7D">Refresh</a>
-        <div>
-            <input type="text" id="search"/>
+        <h1>{{env}}</h1>
+        
+        <div class="searchbar-row">
+            <div class="searchbar">
+                <input class="searchbar-input" type="text" id="search"/>
+            </div>
+            <a class="navbar-link" href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22refresh%22:%20true%7D">Refresh</a>
         </div>
+
         <ul
             id="objectNames"
             class="item-list"

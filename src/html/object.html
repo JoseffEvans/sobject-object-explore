@@ -1,8 +1,13 @@
 <html>
     <body>
-        <h1>{{obj.name}}</h1>
-        <div><a href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%20%22{{obj.name}}%22,%20%22refresh%22:%20true%7D">Refresh</a></div>
-        <input type="text" id="fieldSearch"/>
+        <h1>{{obj.label}} ({{env}}.{{obj.name}})</h1>
+        <div class="searchbar-row">
+            <div class="searchbar">
+                <input class="searchbar-input" type="text" id="fieldSearch"/>
+            </div>
+            <div><a class="navbar-link" href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%20%22{{obj.name}}%22,%20%22refresh%22:%20true%7D">Refresh</a></div>
+        </div>
+
         <ul 
             id="fields"
             class="item-list"

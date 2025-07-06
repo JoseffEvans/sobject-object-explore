@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 export * as alias from './alias';
 export * as env from './env';
 export * as sobject from './sobject';
+export * as formula from './formula';
 
 var database: Database | undefined;
 var dbLog: boolean = false;

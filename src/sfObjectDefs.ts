@@ -166,6 +166,5 @@ export class SObject {
 
 // TODO implement from real command
 export class FormulaData{
-    id!: number
     value!: string
 }
