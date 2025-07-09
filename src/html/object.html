@@ -1,13 +1,17 @@
 <html>
     <body>
         <h1>{{obj.label}} ({{env}}.{{obj.name}})</h1>
+        <div class="tabs">
+            <button id="openFields" class="tab active">Fields</button>
+            <button id="openRelationships" class="tab">Relationships</button>
+        </div>
+
         <div class="searchbar-row">
             <div class="searchbar">
                 <input class="searchbar-input" type="text" id="fieldSearch"/>
             </div>
             <div><a class="navbar-link" href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%20%22{{obj.name}}%22,%20%22refresh%22:%20true%7D">Refresh</a></div>
         </div>
-
         <ul 
             id="fields"
             class="item-list"
@@ -27,8 +31,28 @@
                 </li>
             {% endfor %}
         </ul>
+
+        <ul
+            id="rels"
+            class="item-list"
+        >
+            {% for i, rel in obj.childRelationships.entries() %}
+                <li class="list-item">
+                    <a 
+                        class="list-link"
+                        childSObject="{{rel.childSObject}}"
+                        field="{{rel.field}}"
+                        relationshipName="{{rel.relationshipName}}"
+                        href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%20%22{{rel.childSObject}}%22,%20%22field%22:%20%22{{rel.field}}%22%7D"
+                    >
+                        {{rel.childSObject}}.{{rel.field}} {% if rel.relationshipName %}({{rel.relationshipName}})  {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
         <script>
             var fields = [...document.getElementById("fields").children];
+            var rels = [...document.getElementById("rels").children];
 
             /** @param {string} str @param {string} term*/
             function incudeInParts(str, term){
@@ -50,6 +74,30 @@
 
                     field.style.display = show ? "block" : "none";
                 });
+
+                rels.forEach(rel => {
+                    var child = rel.children[0];
+                    var show = 
+                        !searchTerm ||
+                        incudeInParts(child.getAttribute("childSObject"), searchTerm) ||
+                        incudeInParts(child.getAttribute("field"), searchTerm) ||
+                        incudeInParts(child.getAttribute("relationshipName"), searchTerm)
+                    rel.style.display = show ? "block" : "none";
+                });
+            });
+
+            document.getElementById("openFields").addEventListener("click", (event) => {
+                document.getElementById("fields").style.display = "block";
+                document.getElementById("rels").style.display = "none";
+                document.getElementById("openFields").classList.add("active");
+                document.getElementById("openRelationships").classList.remove("active");
+            });
+
+            document.getElementById("openRelationships").addEventListener("click", (event) => {
+                document.getElementById("rels").style.display = "block";
+                document.getElementById("fields").style.display = "none";
+                document.getElementById("openRelationships").classList.add("active");
+                document.getElementById("openFields").classList.remove("active");
             });
         </script>
     </body>

@@ -30,8 +30,8 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 var currentPanel: vscode.WebviewPanel | undefined; // Upon a second command it reuses the current panel.
-var back : NavParams[] = []
-var forward : NavParams[] = []
+var backHistory : NavParams[] = []
+var forwardHistory : NavParams[] = []
 
 /**
  * The pages shown by this extension are rendered on the server
@@ -71,26 +71,30 @@ async function navigate(
 	log(`Opening sobject explore with params: ${paramDesc(params)}`);
 
 	// Handle navigation back or forward - override the params from the history lists
-	// Seems to be good enough
 	if(params.back){
-		var last = back.pop();
-		if(back.length == 0){
-			back.push({ "env": "" });
+		var currentParams = backHistory.pop(); 
+
+		 // no history means it sould go back to the home page.
+		if(backHistory.length == 0){
+			backHistory.push({ "env": "" });
 			return;
 		} 
-		if(last) forward.push(last);
-		params = back[back.length - 1];
-		if(params.refresh) params.refresh = false;
+
+		if(currentParams) 
+			forwardHistory.push(currentParams);
+
+		params = backHistory[backHistory.length - 1]; // override the parameters
+
+		if(params.refresh) 
+			params.refresh = false;
 	}else if(params.forward){
-		if(forward.length == 0){
-			return;
-		}
-		params = forward.pop()!;
+		if(forwardHistory.length == 0) return;
+		params = forwardHistory.pop()!;
 		if(params.refresh) params.refresh = false;
-		back.push(params);
-	}else{
-		forward = [];
-		back.push(params || { "env" : "" });
+		backHistory.push(params);
+	}else{ // normal navigation
+		forwardHistory = [];
+		backHistory.push(params || { "env" : "" });
 	}
 
 	// Route based on command params. Set the currentPanel.webview.html

@@ -121,3 +121,37 @@
     align-items: center; 
     gap: 4px;
 }
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--vscode-sideBar-border, #222);
+    margin-bottom: 8px;
+    gap: 2px;
+}
+
+.tab {
+    background: var(--vscode-sideBar-background, #23272e);
+    color: var(--vscode-sideBar-foreground, #d4d4d4);
+    border: none;
+    border-radius: 3px 3px 0 0;
+    padding: 6px 16px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    margin-right: 2px;
+    outline: none;
+}
+
+.tab.active,
+.tab:focus {
+    background: var(--vscode-editor-background, #1e1e1e);
+    color: var(--vscode-editor-foreground, #fff);
+    border-bottom: 2px solid var(--vscode-focusBorder, #007acc);
+    z-index: 1;
+}
+
+.tab:hover:not(.active) {
+    background: var(--vscode-list-hoverBackground, #2a2d2e);
+    color: var(--vscode-list-activeSelectionForeground, #fff);
+}
