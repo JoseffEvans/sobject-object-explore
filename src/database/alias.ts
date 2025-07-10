@@ -1,4 +1,4 @@
-import {log, runAsync, allAsync} from './database'
+import {log, runAsync, allAsync} from './database';
 
 export async function setAlias(alias: string[]){
     log('Deleting environments');

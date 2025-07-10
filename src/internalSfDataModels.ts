@@ -1,8 +1,8 @@
 export class SObjectNameData{
-    name!: string
+    name!: string;
 }
 
 export class EnvData{ 
-    env!: string
-    objects!: SObjectNameData[]
+    env!: string;
+    objects!: SObjectNameData[];
 }

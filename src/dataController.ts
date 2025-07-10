@@ -1,8 +1,8 @@
-import * as cli from './sfCli'
+import * as cli from './sfCli';
 import { EnvData } from './internalSfDataModels';
 import { SObject } from './sfObjectDefs';
 
-import * as db from './database/database'
+import * as db from './database/database';
 
 var loggingEnabled: boolean = false;
 
@@ -20,7 +20,7 @@ export async function getAlias(refresh: Boolean): Promise<string[]>{
     }
 
     if(refresh || !aliasList || aliasList.length == 0){
-        log(`Refreshing alias from CLI`)
+        log(`Refreshing alias from CLI`);
         aliasList = await cli.getAlias();
         if(aliasList)
             await db.alias.setAlias(aliasList);

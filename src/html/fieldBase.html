@@ -1,0 +1,22 @@
+<html>
+    <body>
+        <h1>{{field.label}} ({{env}}.{{obj.name}}.{{field.name}})</h1>
+        <h2>Properties</h2>
+        <div class="property-list">
+            <div class="property-row">
+                <span class="property-label">Label</span>
+                <span class="property-value">{{obj.label}}</span>                
+            </div>
+            <div class="property-row">
+                <span class="property-label">Name</span>
+                <span class="property-value">{{obj.name}}</span>                
+            </div>
+            {% if properties %}{{ properties | safe }}{% endif %}
+        </div>
+        <h2>Field JSON</h2>
+        <pre>
+{{fieldJson}}
+        </pre>
+    </body>
+
+</html>

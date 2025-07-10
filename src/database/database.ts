@@ -10,11 +10,14 @@ export * as formula from './formula';
 var database: Database | undefined;
 var dbLog: boolean = false;
 
-export async function initDatabase(context: vscode.ExtensionContext, enableLog: boolean = false){
+export async function initDatabase(context: vscode.ExtensionContext, enableLog: boolean = false, overrideDbPath: string | null = null){
     dbLog = enableLog;
 
-    var dbpath = path.join(context.extensionPath, 'envdata.sqlite');
-    log(`Creating database if not exisits at ${dbpath}`)
+    var dbpath = !overrideDbPath 
+        ? path.join(context.extensionPath, 'envdata.sqlite')
+        : overrideDbPath;
+    
+    log(`Creating database if not exisits at ${dbpath}`);
     database = new Database(dbpath);
 
     log(`Creating environments table`);
@@ -37,7 +40,7 @@ export async function initDatabase(context: vscode.ExtensionContext, enableLog: 
         sobjectId INTEGER,
         fieldName TEXT,
         value TEXT
-    )`)
+    )`);
 }
 
 export function checkInit(){
@@ -50,7 +53,7 @@ export function allAsync(sql: string, params: any[] = []): Promise<any[]> {
         database!.all(sql, params, (err, rows) => {
             if(err) reject(err);
             else resolve(rows);
-        })
+        });
     });
 }
 
@@ -60,7 +63,7 @@ export async function runAsync(sql: string, params: any[] = []){
         database!.run(sql, params, (err) => {
             if(err) reject(err);
             else resolve(null);
-        })
+        });
     });
 }
 

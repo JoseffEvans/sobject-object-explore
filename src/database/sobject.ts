@@ -1,5 +1,5 @@
-import {log, runAsync, allAsync} from './database'
-import {SObject} from '../sfObjectDefs'
+import {log, runAsync, allAsync} from './database';
+import {SObject} from '../sfObjectDefs';
 
 export async function setSObjectData(env: string, sobject: string, data: SObject){
     log(`Setting data for ${sobject} in ${env}`);
@@ -46,5 +46,5 @@ export async function getSObjectId(env: string, sobject: string): Promise<number
     }
 
     log(`Found sobject id ${env}.${sobject} = ${data[0]}`);
-    return data[0]
+    return data[0];
 } 

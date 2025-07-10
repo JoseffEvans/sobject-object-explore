@@ -1,5 +1,5 @@
 import { EnvData } from '../internalSfDataModels';
-import {log, runAsync, allAsync} from './database'
+import {log, runAsync, allAsync} from './database';
 
 export async function getEnvId(envName: string): Promise<number>{
     var envIds = (await allAsync(`SELECT id FROM environments WHERE name = ?`, [envName]));
@@ -17,7 +17,7 @@ export async function setEnvData(data: EnvData){
         FROM sobjects
         WHERE envId = ?;
     `, [envId]);
-
+    
     log(`Adding ${data.objects.length} sobjects for env ${data.env}(${envId})`);
     for(var obj of data.objects){
         await runAsync(`

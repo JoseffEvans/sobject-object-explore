@@ -155,3 +155,48 @@
     background: var(--vscode-list-hoverBackground, #2a2d2e);
     color: var(--vscode-list-activeSelectionForeground, #fff);
 }
+
+.property-list {
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 2px;
+    table-layout: auto;
+}
+
+.property-row {
+    display: table-row;
+    background: none;
+}
+
+.property-label,
+.property-value {
+    display: table-cell;
+    padding: 4px 8px 4px 0;
+    vertical-align: top;
+}
+
+.property-label {
+    color: var(--vscode-descriptionForeground, #b0b0b0);
+    font-weight: 500;
+    font-size: 0.96rem;
+    text-align: left;
+    white-space: nowrap;
+    padding-right: 12px;
+    border-right: 1px solid var(--vscode-sideBar-border, #222);
+    opacity: 0.85;
+    width: 100px;
+}
+
+.property-value {
+    color: var(--vscode-editor-foreground, #e0e0e0);
+    font-size: 0.96rem;
+    padding-left: 12px;
+    word-break: break-all;
+    user-select: text;
+}
+
+.property-row:not(:last-child) .property-label,
+.property-row:not(:last-child) .property-value {
+    border-bottom: 1px solid var(--vscode-sideBar-border, #222);
+}

@@ -1,5 +1,5 @@
 import { getSObjectId } from "./sobject";
-import { log, runAsync, allAsync } from './database'
+import { log, runAsync, allAsync } from './database';
 import { FormulaData } from "../sfObjectDefs";
 
 export async function setFormulaData(env: string, sobject: string, field: string, value: string){

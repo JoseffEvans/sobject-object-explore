@@ -3,23 +3,23 @@ import { readFileSync } from 'fs';
 import * as path from 'path';
 import * as nunjuks from 'nunjucks';
 import { SObjectField } from './sfObjectDefs';
-import * as data from './dataController'
-import * as db from './database/database'
+import * as data from './dataController';
+import * as db from './database/database';
 
 class NavParams {
-	env?: string
-	sobject?: string
-	field?: string
-	refresh? : boolean
-	back?: boolean
-	forward?: boolean
+	env?: string;
+	sobject?: string;
+	field?: string;
+	refresh? : boolean;
+	back?: boolean;
+	forward?: boolean;
 }
 
-const extName = "sobject-object-explore"
+const extName = "sobject-object-explore";
 const dataLogging = true;
 
 export async function activate(context: vscode.ExtensionContext) {
-	console.log(`sobejct object explore extension in ${context.extensionPath}`)
+	console.log(`sobejct object explore extension in ${context.extensionPath}`);
 
 	var openCommand = vscode.commands.registerCommand(
 		`${extName}-open`, 
@@ -30,8 +30,8 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 var currentPanel: vscode.WebviewPanel | undefined; // Upon a second command it reuses the current panel.
-var backHistory : NavParams[] = []
-var forwardHistory : NavParams[] = []
+var backHistory : NavParams[] = [];
+var forwardHistory : NavParams[] = [];
 
 /**
  * The pages shown by this extension are rendered on the server
@@ -179,23 +179,42 @@ async function showField(
 	var sobject = await data.getSObject(env, sobjectName, false);
 	var field = sobject.fields.find(f => f.name == fieldName);
 
-	if(!field) throw Error(`Could not found field ${sobjectName}.${fieldName}`);
+	if(!field || !field.name){
+		currentPanel!.webview.html = 
+			renderNonFatalError(context, env, `Could not find field, ${sobjectName}.${fieldName}. Consider refreshing the object.`);
+		return;
+	}
+
+	var extraProperties = ""; // TODO populate
 
 	if(field.type == "formula"){ // check this
 		var formula = await data.getFormulaValue(env, sobjectName, fieldName, refresh);
 		// create a formula template
 	}else{
-		currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
-			getHtml(context, "fieldDefault"),
-			{
-				env: env,
-				obj: sobject,
-				field: field,
-				navbar: getNavBar(context, env),
-				fieldJson: JSON.stringify(field, null, 4)
-			}
-		));
+
 	}
+
+	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
+		getHtml(context, "fieldBase"),
+		{
+			env: env,
+			obj: sobject,
+			field: field,
+			navbar: getNavBar(context, env),
+			fieldJson: JSON.stringify(field, null, 4),
+			properties: extraProperties
+		}
+	));
+}
+
+function renderExtraFieldProperties(context: vscode.ExtensionContext, typeName: string, field: SObjectField, propertyNames: string[]): string{
+	return `
+		<div class="property-row">
+			${propertyNames.map(name => 
+				`<span class="property-label">${firstUpper(name)}</span><span class="property-value">${(field as any)[name]}</span>`
+			).join('\n')}
+		</div>
+	`;
 }
 
 function getNavBar(context: vscode.ExtensionContext, env: string){
@@ -205,6 +224,10 @@ function getNavBar(context: vscode.ExtensionContext, env: string){
 			env: encodeURI(env)
 		}
 	);
+}
+
+function firstUpper(str: string){
+	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function showError(context: vscode.ExtensionContext, ex: any){
@@ -243,7 +266,7 @@ function findMaxLength(strings: String[]) : number{
 
 function getTypeShortDesc(field: SObjectField){
 	if(field.type == "reference" && field.referenceTo)
-		return `reference(${field.referenceTo.join(', ')})`
+		return `reference(${field.referenceTo.join(', ')})`;
 	else return field.type;
 }
 
@@ -252,7 +275,11 @@ function log(msg: string){
 }
 
 function paramDesc(params: NavParams): string{
-	return `Back: ${params.back}; Forward: ${params.forward}; Env: ${params.env}; Object: ${params.sobject}; Field: ${params.field};`
+	return `Back: ${params.back}; Forward: ${params.forward}; Env: ${params.env}; Object: ${params.sobject}; Field: ${params.field};`;
+}
+
+function renderNonFatalError(context: vscode.ExtensionContext, env: string, msg: string){
+	return renderInContainer(context, env, `<h1>${msg}</h1>`);
 }
 
 function renderInContainer(

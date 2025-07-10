@@ -12,18 +12,18 @@
             </div>
             <div><a class="navbar-link" href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%20%22{{obj.name}}%22,%20%22refresh%22:%20true%7D">Refresh</a></div>
         </div>
+
         <ul 
             id="fields"
             class="item-list"
         >
-            {% for i, field in obj.fields.entries() %}
+            {% for field in obj.fields %}
                 <li class="list-item">
                     <a 
-                        index="{{i}}"
+                        class="list-link"
                         sobjectName="{{field.name}}"
                         sobjectLabel="{{field.label}}"
                         style="display: block; text-decoration: none;"
-                        class="list-link"
                         href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%20%22{{obj.name}}%22,%20%22field%22:%20%22{{field.name}}%22%7D"
                     >
                         <pre style="margin:0;">{{field.label.padEnd(paddingData.label, ' ')}} -- {{field.name.padEnd(paddingData.name, ' ')}} -- {{types[field.name]}}</pre>
@@ -36,7 +36,7 @@
             id="rels"
             class="item-list"
         >
-            {% for i, rel in obj.childRelationships.entries() %}
+            {% for rel in obj.childRelationships %}
                 <li class="list-item">
                     <a 
                         class="list-link"
@@ -50,6 +50,7 @@
                 </li>
             {% endfor %}
         </ul>
+
         <script>
             var fields = [...document.getElementById("fields").children];
             var rels = [...document.getElementById("rels").children];
@@ -66,12 +67,10 @@
 
                 fields.forEach(field => {
                     var child = field.children[0];
-
                     var show = 
                         !searchTerm ||
                         incudeInParts(child.getAttribute("sobjectName"), searchTerm) ||
                         incudeInParts(child.getAttribute("sobjectLabel"), searchTerm);
-
                     field.style.display = show ? "block" : "none";
                 });
 

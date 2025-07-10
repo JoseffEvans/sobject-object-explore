@@ -3311,7 +3311,7 @@ var res = JSON.parse(`{
       }
     },
     "warnings": []
-  }`).result
+  }`).result;
 
   res.name = name;
 
