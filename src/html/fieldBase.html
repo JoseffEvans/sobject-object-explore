@@ -5,14 +5,19 @@
         <div class="property-list">
             <div class="property-row">
                 <span class="property-label">Label</span>
-                <span class="property-value">{{obj.label}}</span>                
+                <span class="property-value">{{field.label}}</span>                
             </div>
             <div class="property-row">
                 <span class="property-label">Name</span>
-                <span class="property-value">{{obj.name}}</span>                
+                <span class="property-value">{{field.name}}</span>                
+            </div>
+            <div class="property-row">
+                <span class="property-label">Type</span>
+                <span class="property-value">{{field.type}}</span>                
             </div>
             {% if properties %}{{ properties | safe }}{% endif %}
         </div>
+        {{ detail | safe }}
         <h2>Field JSON</h2>
         <pre>
 {{fieldJson}}

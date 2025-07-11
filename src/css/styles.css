@@ -200,3 +200,4 @@
 .property-row:not(:last-child) .property-value {
     border-bottom: 1px solid var(--vscode-sideBar-border, #222);
 }
+

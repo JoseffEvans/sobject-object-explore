@@ -185,13 +185,25 @@ async function showField(
 		return;
 	}
 
-	var extraProperties = ""; // TODO populate
+	var extraProperties: string[] = []; // TODO populate
+	var detailHtml: string = "";
 
 	if(field.type == "formula"){ // check this
 		var formula = await data.getFormulaValue(env, sobjectName, fieldName, refresh);
 		// create a formula template
-	}else{
-
+	}else if (field.type == "textarea"){
+		extraProperties = ["length"];
+	}else if(field.type == "boolean"){
+		extraProperties = ["defaultValue"];
+	}else if(field.type == "picklist"){
+		detailHtml = nunjuks.renderString(getHtml(context, "detail_picklist"), {
+			values: field.picklistValues
+				.sort((a, b) => 
+					(+b.defaultValue - +a.defaultValue) || 
+					(+b.active - +a.active) || 
+					a.label.localeCompare(b.label)
+				)
+		});
 	}
 
 	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
@@ -202,19 +214,18 @@ async function showField(
 			field: field,
 			navbar: getNavBar(context, env),
 			fieldJson: JSON.stringify(field, null, 4),
-			properties: extraProperties
+			properties: renderExtraFieldProperties(field, extraProperties),
+			detail: detailHtml
 		}
 	));
 }
 
-function renderExtraFieldProperties(context: vscode.ExtensionContext, typeName: string, field: SObjectField, propertyNames: string[]): string{
-	return `
+function renderExtraFieldProperties(field: SObjectField, propertyNames: string[]): string{
+	return propertyNames.map(name => `
 		<div class="property-row">
-			${propertyNames.map(name => 
-				`<span class="property-label">${firstUpper(name)}</span><span class="property-value">${(field as any)[name]}</span>`
-			).join('\n')}
+			<span class="property-label">${firstUpper(name)}</span><span class="property-value">${(field as any)[name]}</span>
 		</div>
-	`;
+	`).join('\n');
 }
 
 function getNavBar(context: vscode.ExtensionContext, env: string){
