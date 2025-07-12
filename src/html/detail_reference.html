@@ -1,0 +1,16 @@
+<h2>References</h2>
+<div>
+    <ul
+        class="item-list"
+    >
+        {% for ref in field.referenceTo %}
+            <li class="list-item">
+                <a
+                    class="list-link"
+                    target="_blank"
+                    href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%22{{ref}}%22%7D"
+                >{{ref}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

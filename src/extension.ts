@@ -192,10 +192,7 @@ async function showField(
 	var extraProperties: string[] = []; // TODO populate
 	var detailHtml: string = "";
 
-	if(field.type == "formula"){ // check this
-		var formula = await data.getFormulaValue(env, sobjectName, fieldName, refresh);
-		// create a formula template
-	}else if (field.type == "textarea"){
+	if (field.type == "textarea"){
 		extraProperties = ["length"];
 	}else if(field.type == "boolean"){
 		extraProperties = ["defaultValue"];
@@ -210,6 +207,19 @@ async function showField(
 		});
 	}else if(field.type == "string"){
 		extraProperties = ["length"];
+	}else if(field.type == "reference"){
+		detailHtml = nunjuks.renderString(getHtml(context, "detail_reference"), {
+			env: env,
+			field: field
+		});
+	}else if(field.type == "int"){
+		extraProperties = ["digits"];
+	}else if (field.type == "double" || field.type == "currency"){
+		extraProperties = ["precision", "scale"];
+	}
+
+	if(field.calculated){
+		extraProperties.push("calculatedFormula");
 	}
 
 	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
@@ -221,7 +231,8 @@ async function showField(
 			navbar: getNavBar(context, env),
 			fieldJson: JSON.stringify(field, null, 4),
 			properties: renderExtraFieldProperties(field, extraProperties),
-			detail: detailHtml
+			detail: detailHtml,
+			type: getTypeShortDesc(field)
 		}
 	));
 }
@@ -282,9 +293,23 @@ function findMaxLength(strings: String[]) : number{
 }
 
 function getTypeShortDesc(field: SObjectField){
+	var type = field.type;
+
+	if(field.type == "double" || field.type == "currency"){
+		type = `${type}(${field.precision}, ${field.scale})`;
+	}
+
 	if(field.type == "reference" && field.referenceTo)
-		return `reference(${field.referenceTo.join(', ')})`;
-	else return field.type;
+		type = `reference(${field.referenceTo.join(', ')})`;
+	
+	if(field.calculated)
+		type = `formula(${type})`;
+
+	if(field.autoNumber)
+		type = `auto-number(${type})`;
+
+
+	return type;
 }
 
 function log(msg: string){
