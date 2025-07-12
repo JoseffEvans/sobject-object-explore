@@ -2,8 +2,6 @@
 
 The SObject explore extension wraps the Salesforce CLI object commands with a GUI. This extension is not affiliated with, endorsed by, or sponsored by Salesforce. All trademarks are the property of their respective owners.
 
-
-
 # Requirements
 - Salesforce CLI (sf) - You can install the SF CLI from this link: [Install SF CLI](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)
-- One or more CLI alias - Run 'sf alias --help'
+- One or more [authorized](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_web_flow.htm) CLI [alias](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_alias_commands_unified.htm)

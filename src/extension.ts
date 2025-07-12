@@ -5,6 +5,7 @@ import * as nunjuks from 'nunjucks';
 import { SObjectField } from './sfObjectDefs';
 import * as data from './dataController';
 import * as db from './database/database';
+import * as cli from './sfCli';
 
 class NavParams {
 	env?: string;
@@ -48,8 +49,11 @@ async function navigate(
 	params?: NavParams
 ){
 	if(!currentPanel){
-		await db.initDatabase(context, dataLogging);
+		db.setLogging(dataLogging);
 		data.setLogging(dataLogging);
+		cli.setLogging(dataLogging);
+
+		await db.initDatabase(context);
 
 		currentPanel = vscode.window.createWebviewPanel(
 			extName,
@@ -248,7 +252,7 @@ function showError(context: vscode.ExtensionContext, ex: any){
 	console.log(msg);
 	currentPanel!.webview.html = nunjuks.renderString(
 		getHtml(context, "error"),
-		{error: msg}
+		{error: msg, extPath: context.extensionPath}
 	);
 }
 

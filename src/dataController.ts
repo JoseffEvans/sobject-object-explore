@@ -21,7 +21,7 @@ export async function getAlias(refresh: Boolean): Promise<string[]>{
 
     if(refresh || !aliasList || aliasList.length == 0){
         log(`Refreshing alias from CLI`);
-        aliasList = await cli.getAlias();
+        aliasList = (await cli.getAlias()).map(item => item.alias);
         if(aliasList)
             await db.alias.setAlias(aliasList);
         else

@@ -10,9 +10,11 @@ export * as formula from './formula';
 var database: Database | undefined;
 var dbLog: boolean = false;
 
-export async function initDatabase(context: vscode.ExtensionContext, enableLog: boolean = false, overrideDbPath: string | null = null){
-    dbLog = enableLog;
+export function setLogging(toggle: boolean){
+    dbLog = toggle;
+}
 
+export async function initDatabase(context: vscode.ExtensionContext, overrideDbPath: string | null = null){
     var dbpath = !overrideDbPath 
         ? path.join(context.extensionPath, 'envdata.sqlite')
         : overrideDbPath;

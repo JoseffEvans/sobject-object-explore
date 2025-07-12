@@ -1,3 +1,14 @@
 <html>
+    <h1>A fatal error has occurred</h1>
+
+    <h2>Error Information</h2>
     <div>{{error}}</div>
+
+    <h2>Troubleshooting</h2>
+    <ul>
+        <li>Check the SF CLI is installed. Run 'sf --version' in the terminal</li>
+        <li>Check the selected alias is <a href="https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_web_flow.htm">authorized</a>.</li>
+        <li><a href="command:sobject-object-explore-open?%7B%22refresh%22:%20true%7D">Clear the cache</a></li>
+        <li>Delete the SQLite database. File named 'envdata.sqlite' in extension install directory {{extPath}}</li>
+    </ul>
 </html>

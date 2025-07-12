@@ -1,102 +1,18 @@
-import * as assert from 'assert';
-import * as vscode from 'vscode';
-import * as db from '../database/database';
-import { SObject } from '../sfObjectDefs';
+import { resolve } from "path";
+import { SObject } from "./sfObjectDefs";
 
-suite('Extension Test Suite', () => {
-    vscode.window.showInformationMessage('Start all tests.');
-
-    test("Db end to end", async () => {
-        await initInMemeory();
-
-        // First the alias list will be retrieved.
-        // This should populate the environments table
-        await db.alias.setAlias(["test", "live"]);
-
-        // Get the alias list
-        var aliasList = await db.alias.getAlias();
-        assert.ok(aliasList.length == 2);
-        assert.ok(aliasList.includes("test"))
-
-        // Next the object list will be retrieved for one of the environments
-        // This data contains only the name of the objects
-        // It should initialise the sobject records
-        await db.env.setEnvData({
-            env: "test",
-            objects: [{ name: "case" }, { name: "task" }]
-        });
-
-        // Get the sobject list
-        var envdata = await db.env.getEnvData("test");
-        assert.ok(envdata);
-        assert.ok(envdata.objects.length == 2);
-        assert.ok(envdata.objects.map(data => data.name).includes("case"));
-
-        // Next the object data will be retrieved for one of the objects
-        // This will populate the "value" field on sobject
-        await db.sobject.setSObjectData("test", "case", getRealCaseData());
-
-        // Get sobject data
-        var sobjectData = await db.sobject.getSObjectData("test", "case");
-        assert.ok(sobjectData);
-        assert.ok(sobjectData.fields.length > 0);
-        assert.ok(sobjectData.fields.map(field => field.name).includes("ContactFax"));
-    });
-
-    test('database init, table creation', async () => {
-        await initInMemeory();
-        assert.ok(true);
-
-        var tableNames = (await db.allAsync("SELECT name FROM sqlite_master WHERE type='table'"))
-            .map(data => data.name);
-
-        assert.ok(tableNames.includes("environments"));
-        assert.ok(tableNames.includes("sobjects"));
-        assert.ok(tableNames.includes("formulas"));
-    });
-
-    test('Alias', async () => {
-        await initInMemeory();
-        await db.alias.setAlias(["test", "live", "dev"]);
-
-        var alias = await db.alias.getAlias();
-
-        assert.ok(alias.length == 3);
-        assert.ok(alias.includes("test"));
-        assert.ok(alias.includes("live"));
-
-        // refreshing the alias list should clear the entire database
-
-        await db.env.setEnvData({
-            env: "test",
-            objects: [{ name: "case" }, { name: "task" }]
-        });
-
-        await db.alias.setAlias(["test", "live2"]);
-        alias = await db.alias.getAlias();
-
-        assert.ok(alias.length == 2);
-        assert.ok(alias.includes("test"));
-        assert.ok(alias.includes("live2"));
-
-        var envData = await db.env.getEnvData("test");
-
-        assert.ok(envData.objects.length == 0); // test environment data should have been cleared
-    });
-
-    test("Environments", async () => {
-        await initInMemeory();
-    })
-});
-
-async function initInMemeory() {
-    db.setLogging(true);
-    await db.initDatabase(null!, ":memory:");
+export async function getAlias(){
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return ["dev1", "test", "live", "test2", "supertest"];
 }
 
+export async function getSObjectNames(env: string){
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return ["Case", "Task"];
+}
 
-function getRealCaseData(): SObject {
-    return JSON.parse(`{
+export async function getSObject(env: string, name: string) : Promise<SObject>{
+var res = JSON.parse(`{
     "status": 0,
     "result": {
       "actionOverrides": [],
@@ -3396,4 +3312,15 @@ function getRealCaseData(): SObject {
     },
     "warnings": []
   }`).result;
+
+  res.name = name;
+
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  return res;
+}
+
+export async function getFormula(env: string, sobject: string, field: string): Promise<string | null>{
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  return "TEST FORMULA VALUE";
 }
