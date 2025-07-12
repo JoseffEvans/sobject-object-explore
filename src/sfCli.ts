@@ -43,7 +43,7 @@ export async function execCli(cmd: string): Promise<any>{
     try {
         log(`Executing ${cmd}`);
         
-        const { stdout } = await execAsync(cmd);
+        const { stdout } = await execAsync(cmd, {maxBuffer: 1024 * 1024 * 5});
         const res = JSON.parse(stdout);
         
         if(res.result){
