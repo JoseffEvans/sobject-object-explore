@@ -67,7 +67,9 @@ async function navigate(
 		);
 
 		currentPanel.onDidDispose(e => {currentPanel = undefined});
-	} 
+	} else{
+		currentPanel.reveal();
+	}
 
 	if(!params) params = {};
 	if(!params.refresh) params.refresh = false;
