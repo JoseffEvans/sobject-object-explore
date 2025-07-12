@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import { SObject } from './sfObjectDefs';
 
 const execAsync = promisify(exec);
-const baseCmd = 'jdwioadj';
+const baseCmd = 'sf';
 
 var logging = false;
 
