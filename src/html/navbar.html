@@ -5,6 +5,8 @@
     <!-- <a class="navbar-link" id="gotoEnv" href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22%7D">{{env}}</a> -->
 
     <script>
+        setTimeout(() => window.scrollTo(0, 0), 10);
+
         document.addEventListener("mousedown", event => {
             if (event.button === 3)
                 document.getElementById("back").click();
