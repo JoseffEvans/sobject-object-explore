@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h1>{{field.label}} ({{env}}.{{obj.name}}.{{field.name}})</h1>
+        <h1>{{field.label}} (<a href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22%7D">{{env}}</a>.<a href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%20%22{{obj.name}}%22%7D">{{obj.name}}</a>.{{field.name}})</h1>
         <h2>Properties</h2>
         <div class="property-list">
             <div class="property-row">

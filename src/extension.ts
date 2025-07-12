@@ -204,6 +204,8 @@ async function showField(
 					a.label.localeCompare(b.label)
 				)
 		});
+	}else if(field.type == "string"){
+		extraProperties = ["length"];
 	}
 
 	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
