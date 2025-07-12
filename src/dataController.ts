@@ -70,25 +70,6 @@ export async function getSObject(env: string, sobject: string, refresh: boolean)
     return data;
 }
 
-export async function getFormulaValue(env: string, sobject: string, field: string, refresh: boolean): Promise<string | null>{
-    log(`Getting formula value for ${env}.${sobject}.${field}`);
-
-    var data: string | undefined | null = undefined;
-
-    if(!refresh){
-        data = await db.formula.getFormulaData(env, sobject, field);
-    }
-    
-    if(refresh || !data){
-        log(`Refreshing formula from cli for ${env}.${sobject}.${field}`);
-        data = await cli.getFormula(env, sobject, field);
-        if(!data) throw Error(`Data controller failed when searching for formula ${env}.${sobject}.${field}`);
-        await db.formula.setFormulaData(env, sobject, field, data);
-    }
-
-    return data;
-}
-
 function log(msg: string){
     if(loggingEnabled) console.log(`Data controller: ${msg}`);
 }

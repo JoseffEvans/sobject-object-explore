@@ -34,11 +34,6 @@ export async function getSObject(env: string, name: string): Promise<SObject>{
     return await execCli(`${baseCmd} sobject describe --sobject ${sanitize(name)} --target-org ${sanitize(env)} --json`);
 }
 
-export async function getFormula(env: string, sobject: string, field: string): Promise<string | null>{
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  return "TEST FORMULA VALUE";
-}
-
 export async function execCli(cmd: string): Promise<any>{
     try {
         log(`Executing ${cmd}`);

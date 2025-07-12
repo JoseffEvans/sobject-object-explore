@@ -189,7 +189,7 @@ async function showField(
 		return;
 	}
 
-	var extraProperties: string[] = []; // TODO populate
+	var extraProperties: string[] = [];
 	var detailHtml: string = "";
 
 	if (field.type == "textarea"){
