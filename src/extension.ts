@@ -276,14 +276,14 @@ function showLoading(context: vscode.ExtensionContext, msg: string){
 
 function getHtml(context: vscode.ExtensionContext, name: string){
 	return readFileSync(
-		path.join(context.extensionPath, 'src', 'html', `${name}.html`),
+		path.join(context.extensionPath, 'out', 'html', `${name}.html`),
 		'utf8'	
 	);
 }
 
 function getCss(context: vscode.ExtensionContext, name: string){
 	return readFileSync(
-		path.join(context.extensionPath, 'src', 'css', `${name}.css`),
+		path.join(context.extensionPath, 'out', 'css', `${name}.css`),
 		'utf8'	
 	);
 }
