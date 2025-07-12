@@ -3,6 +3,8 @@ The SObject explore extension wraps the Salesforce CLI object commands with a GU
 
 This extension provides a quick look up refrence for your Salesforce organisaion's sobject definitions.
 
+This is an early verion of the extension and is still in development
+
 # Features
 - A read-only GUI for SObject definitions
 - Search features
