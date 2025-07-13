@@ -18,3 +18,6 @@ This is an early verion of the extension and is still in development
 # How it works
 - The extension reads information using the SF CLI's alias and sobject commands.
 - The extension saves to results to a SQLITE DB in the extensions directory for instant loading.
+
+# Build
+- Run "npm run vscode:prepublish"

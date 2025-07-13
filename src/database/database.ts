@@ -5,7 +5,6 @@ import * as vscode from 'vscode';
 export * as alias from './alias';
 export * as env from './env';
 export * as sobject from './sobject';
-export * as formula from './formula';
 
 var database: Database | undefined;
 var dbLog: boolean = false;
@@ -34,14 +33,6 @@ export async function initDatabase(context: vscode.ExtensionContext, overrideDbP
         envId INTEGER,
         name TEXT,
         data TEXT
-    )`);
-
-    log(`Creating formula table`);
-    await runAsync(`CREATE TABLE IF NOT EXISTS formulas(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        sobjectId INTEGER,
-        fieldName TEXT,
-        value TEXT
     )`);
 }
 
