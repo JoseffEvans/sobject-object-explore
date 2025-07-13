@@ -1,4 +1,4 @@
-import { EnvData } from '../internalSfDataModels';
+import { EnvData } from '../models';
 import {log, runAsync, allAsync} from './database';
 
 export async function getEnvId(envName: string): Promise<number>{

@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { SObject } from './sfObjectDefs';
+import { SObject } from './models';
 
 const execAsync = promisify(exec);
 const baseCmd = 'sf';

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { readFileSync } from 'fs';
 import * as path from 'path';
 import * as nunjuks from 'nunjucks';
-import { SObjectField } from './sfObjectDefs';
+import { SObjectField } from './models';
 import * as data from './dataController';
 import * as db from './database/database';
 import * as cli from './sfCli';
@@ -130,7 +130,7 @@ async function showEnvironmentSelect(
 	refresh: boolean
 ){
 	currentPanel!.webview.html = renderInContainer(context, "", nunjuks.renderString( 
-		getHtml(context, 'selectEnvironment'),
+		getHtml(context, 'page_alias'),
 		{ 
 			alias: await data.getAlias(refresh),
 			navbar: getNavBar(context, "")
@@ -141,7 +141,7 @@ async function showEnvironmentSelect(
 async function showEnvironment(context: vscode.ExtensionContext, env: string, refresh: boolean){
 	var objectNames = (await data.getEnvData(env, refresh)).objects.map(obj => obj.name);
 	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
-		getHtml(context, "environmentIndex"),
+		getHtml(context, "page_environment"),
 		{ 
 			env: env, 
 			names: objectNames,
@@ -161,7 +161,7 @@ async function getSObject(
 		(a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase())
 	);
 	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
-		getHtml(context, "object"),
+		getHtml(context, "page_sobject"),
 		{
 			env: env,
 			obj: object,
@@ -225,7 +225,7 @@ async function showField(
 	}
 
 	currentPanel!.webview.html = renderInContainer(context, env, nunjuks.renderString(
-		getHtml(context, "fieldBase"),
+		getHtml(context, "page_field"),
 		{
 			env: env,
 			obj: sobject,

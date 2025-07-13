@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as db from '../database/database';
-import { SObject } from '../sfObjectDefs';
+import { SObject } from '../models';
 
 suite('Extension Test Suite', () => {
     vscode.window.showInformationMessage('Start all tests.');

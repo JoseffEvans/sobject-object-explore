@@ -1,6 +1,6 @@
 import * as cli from './sfCli';
-import { EnvData } from './internalSfDataModels';
-import { SObject } from './sfObjectDefs';
+import { EnvData } from './models';
+import { SObject } from './models';
 
 import * as db from './database/database';
 

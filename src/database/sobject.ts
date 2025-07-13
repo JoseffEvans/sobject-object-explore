@@ -1,5 +1,5 @@
 import {log, runAsync, allAsync} from './database';
-import {SObject} from '../sfObjectDefs';
+import {SObject} from '../models';
 
 export async function setSObjectData(env: string, sobject: string, data: SObject){
     log(`Setting data for ${sobject} in ${env}`);

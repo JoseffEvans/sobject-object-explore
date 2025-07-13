@@ -1,3 +1,13 @@
+export class SObjectNameData{
+    name!: string;
+}
+
+export class EnvData{ 
+    env!: string;
+    objects!: SObjectNameData[];
+}
+
+
 export class SObjectChildRelationship {
     cascadeDelete!: boolean;
     childSObject!: string;
