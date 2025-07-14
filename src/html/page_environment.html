@@ -20,6 +20,7 @@
                         class="list-link"
                         target="_blank"
                         href="command:sobject-object-explore-open?%7B%22env%22:%20%22{{env}}%22,%20%22sobject%22:%22{{name}}%22%7D"
+                        attrName="{{name}}"
                     >{{name}}</a>
                 </li>
             {% endfor %}
@@ -31,7 +32,7 @@
             function search(searchText){
                 searchText = searchText.toLowerCase();
                 [... objectNames.children].forEach(item => {
-                    item.style.display = !searchText || item.innerText.toLowerCase().includes(searchText)
+                    item.style.display = !searchText || item.children[0].getAttribute("attrName").toLowerCase().includes(searchText)
                         ? "block"
                         : "none";
                 });
