@@ -5,6 +5,9 @@ This extension provides a quick look up refrence for your Salesforce organisaion
 
 This is an early verion of the extension and is still in development
 
+# Commands
+- Open SObject Explore
+
 # Features
 - A read-only GUI for SObject definitions
 - Search features

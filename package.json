@@ -2,7 +2,7 @@
   "name": "sobject-object-explore",
   "displayName": "sobject-object-explore",
   "description": "",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "JoseffEvans",
   "repository": {
     "type": "git",
@@ -21,12 +21,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "sobject-object-explore.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "sobject-object-explore-open",
-        "title": "sobject object expore open"
+        "title": "Open SObject Explore"
       }
     ]
   },
