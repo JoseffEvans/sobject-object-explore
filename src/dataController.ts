@@ -25,7 +25,7 @@ export async function getAlias(refresh: Boolean): Promise<string[]>{
         if(aliasList)
             await db.alias.setAlias(aliasList);
         else
-            console.log(`Did not find any alias from CLI`);
+            log(`Did not find any alias from CLI`);
     }
 
     return aliasList;
